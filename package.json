@@ -2,7 +2,7 @@
   "name": "solidity-priject",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "run.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -16,5 +16,8 @@
     "ethereum-waffle": "^3.4.4",
     "ethers": "^5.7.1",
     "hardhat": "^2.9.9"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.2"
   }
 }
