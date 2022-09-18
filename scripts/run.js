@@ -1,35 +1,35 @@
 const main = async () => {
-    const [owner, randomPerson] = await hre.ethers.getSigners();
-    const myContractFactory = await hre.ethers.getContractFactory("myContract");
-    const myContract = await myContractFactory.deploy();
-    await myContract.deployed();
+    const waveContractFactory = await hre.ethers.getContractFactory("WavePortal");
+    const waveContract = await waveContractFactory.deploy({
+        value: hre.ethers.utils.parseEther("0.1"),
+    });
+    await waveContract.deployed();
+    console.log("Contract addy:", waveContract.address);
 
-    console.log("Contract deployed to:", myContract.address);
-    console.log("Contract deployed by:", owner.address);
+    let contractBalance = await hre.ethers.provider.getBalance(waveContract.address);
+    console.log("Contract balance:", hre.ethers.utils.formatEther(contractBalance));
 
-    let waveCount;
-    waveCount = await myContract.getTotalWaves();
-
-    let waveTxn = await myContract.wave();
+    const waveTxn = await waveContract.wave("This is wave #1");
     await waveTxn.wait();
 
-    waveCount = await myContract.getTotalWaves();
+    const waveTxn2 = await waveContract.wave("This is wave #2");
+    await waveTxn2.wait();
 
-    waveTxn = await myContract.connect(randomPerson).wave();
-    await waveTxn.wait();
+    contractBalance = await hre.ethers.provider.getBalance(waveContract.address);
+    console.log("Contract balance:", hre.ethers.utils.formatEther(contractBalance));
 
-    waveCount = await myContract.getTotalWaves();
-  };
-  
-  const runMain = async () => {
+    let allWaves = await waveContract.getAllWaves();
+    console.log(allWaves);
+};
+
+const runMain = async () => {
     try {
-      await main();
-      process.exit(0); // exit Node process without error
+        await main();
+        process.exit(0);
     } catch (error) {
-      console.log(error);
-      process.exit(1); // exit Node process while indicating 'Uncaught Fatal Exception' error
+        console.log(error);
+        process.exit(1);
     }
-    // Read more about Node exit ('process.exit(num)') status codes here: https://stackoverflow.com/a/47163396/7974948
-  };
-  
-  runMain();
+};
+
+runMain();
